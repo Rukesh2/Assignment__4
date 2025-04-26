@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Student = require('../models/student');
 const Course = require('../models/course');
-require('../index');
+require('../index');  // Assuming your db connection is in index.js
 
 // Create a course
 async function createCourse() {
@@ -10,8 +10,11 @@ async function createCourse() {
     instructor: "Dr. Smith",
     credits: 4
   });
-  await course.save();
-  console.log("Course Created:", course);
+
+  // Save the course and return it
+  const savedCourse = await course.save();
+  console.log("Course Created:", savedCourse);
+  return savedCourse;  // Return the saved course object
 }
 
 // Create a student
@@ -22,13 +25,14 @@ async function createStudent(courseIds) {
     age: 21,
     enrolledCourses: courseIds
   });
+
   await student.save();
   console.log("Student Created:", student);
 }
 
 async function run() {
-  const course = await createCourse();
-  await createStudent([course._id]);
+  const course = await createCourse();  // Get the course object after it's saved
+  await createStudent([course._id]);    // Pass the course _id to createStudent
 }
 
 run();
